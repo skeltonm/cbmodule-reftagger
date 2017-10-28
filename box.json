@@ -1,0 +1,8 @@
+{
+	"version": "1.0",
+	"location": "https://github.com/skeltonm/cbmodule-reftagger/raw/master/cbmodule-reftagger.zip",
+	"packageDirectory": "cbmodule-reftagger",
+	"slug": "cbmodule-reftagger",
+	"name": "Reftagger",
+	"type": "contentbox-modules"
+}

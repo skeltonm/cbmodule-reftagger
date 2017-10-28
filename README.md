@@ -7,7 +7,7 @@ Mark Skelton/Computer Know How, LLC
 
 Summary
 -----------------
-
+Enables Reftagger on your website to create hover tooltips for Scripture references on your website.
 
 Install Instructions
 -----------------

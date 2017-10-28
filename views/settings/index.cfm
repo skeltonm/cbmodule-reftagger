@@ -41,7 +41,7 @@
 												<legend>Heading Style</legend>
 
 												<div class="form-group">
-													<label for="headingStyle_fontColor">Font Color:</label>
+													<label for="headingStyle_fontColor">Font Color <small>(Leave blank for default)</small>:</label>
 													<input type="text"
 														name="headingStyle_fontColor"
 														value="#prc.settings.headingStyle.fontColor#"
@@ -60,7 +60,7 @@
 												</div>
 
 												<div class="form-group">
-													<label for="headingStyle_fontSize">Font Size (px):</label>
+													<label for="headingStyle_fontSize">Font Size (px) <small>(Leave blank for default)</small>:</label>
 													<input type="number"
 														name="headingStyle_fontSize"
 														value="#prc.settings.headingStyle.fontSize#"
@@ -68,7 +68,7 @@
 												</div>
 
 												<div class="form-group">
-													<label for="headingStyle_background">Background:</label>
+													<label for="headingStyle_background">Background <small>(Leave blank for default)</small>:</label>
 													<input type="text"
 														name="headingStyle_background"
 														value="#prc.settings.headingStyle.background#"
@@ -80,7 +80,7 @@
 												<legend>Body Style</legend>
 
 												<div class="form-group">
-													<label for="bodyStyle_fontColor">Font Color:</label>
+													<label for="bodyStyle_fontColor">Font Color <small>(Leave blank for default)</small>:</label>
 													<input type="text"
 														name="bodyStyle_fontColor"
 														value="#prc.settings.bodyStyle.fontColor#"
@@ -99,7 +99,7 @@
 												</div>
 
 												<div class="form-group">
-													<label for="bodyStyle_fontSize">Font Size (px):</label>
+													<label for="bodyStyle_fontSize">Font Size (px) <small>(Leave blank for default)</small>:</label>
 													<input type="number"
 														name="bodyStyle_fontSize"
 														value="#prc.settings.bodyStyle.fontSize#"
@@ -125,7 +125,7 @@
 												</div>
 
 												<div class="form-group">
-													<label for="bodyStyle_linkColor">Link Color:</label>
+													<label for="bodyStyle_linkColor">Link Color <small>(Leave blank for default)</small>:</label>
 													<input type="text"
 														name="bodyStyle_linkColor"
 														value="#prc.settings.bodyStyle.linkColor#"

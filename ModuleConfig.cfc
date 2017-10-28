@@ -11,7 +11,7 @@ Description:  Creates Reftagger calendars
 component {
 	// Module Properties
 	this.title = "Reftagger";
-	this.author = "Computer Know How, LLC";
+	this.author = "Mark Skelton";
 	this.webURL = "http://ggacres.org";
 	this.description = "Creates tooltips on all Scripture references found on your website.";
 	this.version = "1.0";
@@ -40,7 +40,7 @@ component {
 			},
 			bibleOptions = {
 				bibleTranslation = "ESV",
-				onlineBibleReader = "biblia"
+				onlineBibleReader = "bible.biblia"
 			},
 			additionalStyling = {
 				dropShadow = true,
@@ -77,6 +77,7 @@ component {
 
 		// Interceptors
 		interceptors = [
+			{ class="#moduleMapping#.interceptors.script", name="script@reftagger" },
 			{ class="#moduleMapping#.interceptors.request", properties={ entryPoint="cbadmin" }, name="request@reftagger" }
 		];
 	}
@@ -116,6 +117,10 @@ component {
 
 		// Flush the settings cache so our new settings are reflected
 		settingService.flushSettingsCache();
+
+		// copy the default js file to the minified file location
+		var jsPath = controller.getSetting("modules")["cbmodule-reftagger"].path & "/includes/js/";
+		fileCopy(jsPath & "reftagger.js", "reftagger.min.js");
 	}
 
 	/**

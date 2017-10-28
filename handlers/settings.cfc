@@ -16,7 +16,7 @@ component extends="base" {
 		prc.settings = deserializeJSON(settingService.getSetting("reftagger"));
 
 		prc.fontFamilyOptions = [
-			["Default font", ""],
+			["Default", ""],
 			["Arial", "Arial, 'Helvetica Neue', Helvetica, sans-serif"],
 			["Courier New", "'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace"],
 			["Georgia", "Georgia, Times, 'Times New Roman', serif"],
@@ -97,7 +97,110 @@ component extends="base" {
 		// Flush the settings cache so our new settings are reflected
 		settingService.flushSettingsCache();
 
+		this.createJs(existingSettings);
+
 		getInstance("MessageBox@cbmessagebox").info("Settings Saved & Updated!");
 		setNextEvent("reftagger.settings");
+	}
+
+	private function createJs(settings) {
+		var s = arguments.settings;
+
+		var js = "var refTagger={
+			settings:{
+				addLogosLink:@logosIntegration.addLogosButtonToTooltips@,
+				bibleReader:'@bibleOptions.onlineBibleReader@',
+				bibleVersion:'@bibleOptions.bibleTranslation@',
+				caseInsensitive:@advancedOptions.caseInsensitive@,
+				convertHyperlinks:@advancedOptions.enableReftaggerOnExistingBibliaLinks@,
+				dropShadow:@additionalStyling.dropShadow@,
+				linksOpenNewWindow:@advancedOptions.openBibleInNewWindow@,
+				logosLinkIcon:'@logosIntegration.theme@',
+				noSearchClassNames:[@excludeContent.tagsToExclude@],
+				noSearchTagNames:[@excludeContent.classesToExclude@],
+				roundCorners:@additionalStyling.roundedCorners@,
+				socialSharing:[@socialSharing@],
+				tooltipStyle:'@bodyStyle.background@',
+				useTooltip:@advancedOptions.showTooltipOnHover@,
+				tagChapters:@advancedOptions.chapterLevelTagging@,
+				customStyle:{
+					heading:{
+						backgroundColor:'@headingStyle.background@',
+						color:'@headingStyle.fontColor@',
+						fontFamily:'@headingStyle.fontFamily@',
+						fontSize:'@headingStyle.fontSize@'
+					},
+					body:{
+						color:'@bodyStyle.fontColor@',
+						fontFamily:'@bodyStyle.fontFamily@',
+						fontSize:'@bodyStyle.fontSize@',
+						moreLink:{
+							color:'@bodyStyle.linkColor@'
+						}
+					}
+				}
+			}
+		};(function(d,t){
+			var g=d.createElement(t),
+				s=d.getElementsByTagName(t)[0];
+				g.src='//api.reftagger.com/v2/RefTagger.js';
+				s.parentNode.insertBefore(g,s);
+		}(document,'script'));";
+
+		var socialSharing = "";
+		var tagsToExclude = replace(s.excludeContent.tagsToExclude, ",", "','", "all");
+		var classesToExclude = replace(s.excludeContent.classesToExclude, ",", "','", "all");
+
+		if (tagsToExclude neq "") { tagsToExclude = "'" & tagsToExclude & "'"; }
+		if (classesToExclude neq "") { classesToExclude = "'" & classesToExclude & "'"; }
+
+		if (s.socialShare.twitter) { socialSharing &= "'twitter',"; }
+		if (s.socialShare.facebook) { socialSharing &= "'facebook',"; }
+		if (s.socialShare.googlePlus) { socialSharing &= "'google',"; }
+		if (s.socialShare.faithlife) { socialSharing &= "'faithlife',"; }
+
+		// font color defaults
+		if (s.headingStyle.background eq "") { s.headingStyle.background = "##e7e7e7"; }
+		if (s.headingStyle.fontColor eq "") { s.headingStyle.fontColor = "##333"; }
+		if (s.bodyStyle.fontColor eq "") { s.bodyStyle.fontColor = "##666"; }
+		if (s.bodyStyle.linkColor eq "") { s.bodyStyle.linkColor = "##0080FF"; }
+
+		// escape quotes in font family
+		s.headingStyle.fontFamily = replace(s.headingStyle.fontFamily, "'", "\'", "all");
+		s.bodyStyle.fontFamily = replace(s.bodyStyle.fontFamily, "'", "\'", "all");
+
+		js = replace(js, "@logosIntegration.addLogosButtonToTooltips@", s.logosIntegration.addLogosButtonToTooltips);
+		js = replace(js, "@bibleOptions.onlineBibleReader@", s.bibleOptions.onlineBibleReader);
+		js = replace(js, "@bibleOptions.bibleTranslation@", s.bibleOptions.bibleTranslation);
+		js = replace(js, "@advancedOptions.caseInsensitive@", s.advancedOptions.caseInsensitive);
+		js = replace(js, "@advancedOptions.enableReftaggerOnExistingBibliaLinks@", s.advancedOptions.enableReftaggerOnExistingBibliaLinks);
+		js = replace(js, "@additionalStyling.dropShadow@", s.additionalStyling.dropShadow);
+		js = replace(js, "@advancedOptions.openBibleInNewWindow@", s.advancedOptions.openBibleInNewWindow);
+		js = replace(js, "@logosIntegration.theme@", s.logosIntegration.theme);
+		js = replace(js, "@excludeContent.tagsToExclude@", tagsToExclude);
+		js = replace(js, "@excludeContent.classesToExclude@", classesToExclude);
+		js = replace(js, "@additionalStyling.roundedCorners@", s.additionalStyling.roundedCorners);
+		js = replace(js, "@socialSharing@", socialSharing);
+		js = replace(js, "@bodyStyle.background@", s.bodyStyle.background);
+		js = replace(js, "@advancedOptions.showTooltipOnHover@", s.advancedOptions.showTooltipOnHover);
+		js = replace(js, "@advancedOptions.chapterLevelTagging@", s.advancedOptions.chapterLevelTagging);
+		js = replace(js, "@headingStyle.background@", s.headingStyle.background);
+		js = replace(js, "@headingStyle.fontColor@", s.headingStyle.fontColor);
+		js = replace(js, "@headingStyle.fontFamily@", s.headingStyle.fontFamily);
+		js = replace(js, "@headingStyle.fontSize@", s.headingStyle.fontSize);
+		js = replace(js, "@bodyStyle.fontColor@", s.bodyStyle.fontColor);
+		js = replace(js, "@bodyStyle.fontFamily@", s.bodyStyle.fontFamily);
+		js = replace(js, "@bodyStyle.fontSize@", s.bodyStyle.fontSize);
+		js = replace(js, "@bodyStyle.linkColor@", s.bodyStyle.linkColor);
+
+		writeJsToDisk(js);
+	}
+
+	private function writeJsToDisk(js) {
+		arguments.js = replace(arguments.js, chr(9), "", "all");
+		arguments.js = replace(arguments.js, chr(10), "", "all");
+		arguments.js &= chr(10);
+
+		fileWrite(getSetting("modules")["cbmodule-reftagger"].path & "/includes/js/reftagger.min.js", arguments.js);
 	}
 }
