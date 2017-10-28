@@ -1,6 +1,7 @@
 ﻿/**
 ********************************************************************************
 Copyright 2017 Reftagger by Mark Skelton and Computer Know How, LLC
+ggacres.org
 compknowhow.com
 ********************************************************************************
 
@@ -11,7 +12,7 @@ component {
 	// Module Properties
 	this.title = "Reftagger";
 	this.author = "Computer Know How, LLC";
-	this.webURL = "https://compknowhow.com";
+	this.webURL = "http://ggacres.org";
 	this.description = "Creates tooltips on all Scripture references found on your website.";
 	this.version = "1.0";
 	// If true, looks for views in the parent first, if not found, then in the module. Else vice-versa
@@ -34,15 +35,15 @@ component {
 				fontColor = "",
 				fontFamily = "",
 				fontSize = "",
-				background = "",
+				background = "light",
 				linkColor = ""
 			},
 			bibleOptions = {
 				bibleTranslation = "ESV",
-				onlineBibleReader = ""
+				onlineBibleReader = "biblia"
 			},
 			additionalStyling = {
-				dropShadows = true,
+				dropShadow = true,
 				roundedCorners = false
 			},
 			socialShare = {
@@ -52,17 +53,17 @@ component {
 				faithlife = true
 			},
 			excludeContent = {
-				tagsToExclude = "",
+				tagsToExclude = "h1,h2,h3",
 				classesToExclude = ""
 			},
 			logosIntegration = {
 				addLogosButtonToTooltips = false,
-				logosButtonTheme = ""
+				theme = "light"
 			},
 			advancedOptions = {
 				showTooltipOnHover = true,
 				openBibleInNewWindow = true,
-				caseSensitivity = true,
+				caseInsensitive = false,
 				enableReftaggerOnExistingBibliaLinks = false,
 				chapterLevelTagging = false
 			}
@@ -76,7 +77,6 @@ component {
 
 		// Interceptors
 		interceptors = [
-			// { class="#moduleMapping#.interceptors.includes", name="includes@reftagger" },
 			{ class="#moduleMapping#.interceptors.request", properties={ entryPoint="cbadmin" }, name="request@reftagger" }
 		];
 	}

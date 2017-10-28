@@ -1,6 +1,7 @@
 /**
 ********************************************************************************
-Copyright 2017 Full Calendar by Mark Skelton and Computer Know How, LLC
+Copyright 2017 Reftagger by Mark Skelton and Computer Know How, LLC
+ggacres.org
 compknowhow.com
 ********************************************************************************
 
@@ -8,8 +9,8 @@ Author:  Mark Skelton
 Description:  I handle the setting events
 */
 component extends="base" {
-	property name="settingService" 	inject="settingService@cb";
-	property name="cb" 				inject="cbHelper@cb";
+	property name="settingService" inject="settingService@cb";
+	property name="cb" inject="cbHelper@cb";
 
 	function index(event,rc,prc){
 		prc.settings = deserializeJSON(settingService.getSetting("reftagger"));
@@ -38,60 +39,57 @@ component extends="base" {
 	}
 
 	function saveSettings(event,rc,prc){
-		var incomingSettings = "";
-		var newSettings = {};
+		var oSetting = settingService.findWhere({ name="reftagger" });
 
-		var oSetting = settingService.findWhere({name="reftagger"});
-
-		if(structKeyExists(rc,"googleCalendarApiKey")) {
-			var incomingSettings = serializeJSON(
-				{
-					"googleCalendarApiKey" = rc.googleCalendarApiKey,
-					"openGCalEvents" = structKeyExists(rc, "openGCalEvents") ? true : false,
-					"newTab" = structKeyExists(rc, "newTab") ? true : false
-				}
-			);
+		var incomingSettings = {
+			headingStyle = {
+				fontColor = rc.headingStyle_fontColor,
+				fontFamily = rc.headingStyle_fontFamily,
+				fontSize = rc.headingStyle_fontSize,
+				background = rc.headingStyle_background
+			},
+			bodyStyle = {
+				fontColor = rc.bodyStyle_fontColor,
+				fontFamily = rc.bodyStyle_fontFamily,
+				fontSize = rc.bodyStyle_fontSize,
+				background = rc.bodyStyle_background,
+				linkColor = rc.bodyStyle_linkColor
+			},
+			bibleOptions = {
+				bibleTranslation = rc.bibleOptions_bibleTranslation,
+				onlineBibleReader = rc.bibleOptions_onlineBibleReader
+			},
+			additionalStyling = {
+				dropShadow = structKeyExists(rc, "additionalStyling_dropShadow"),
+				roundedCorners = structKeyExists(rc, "additionalStyling_roundedCorners")
+			},
+			socialShare = {
+				twitter = structKeyExists(rc, "socialShare_twitter"),
+				facebook = structKeyExists(rc, "socialShare_facebook"),
+				googlePlus = structKeyExists(rc, "socialShare_googlePlus"),
+				faithlife = structKeyExists(rc, "socialShare_faithlife")
+			},
+			excludeContent = {
+				tagsToExclude = rc.excludeContent_tagsToExclude,
+				classesToExclude = rc.excludeContent_classesToExclude
+			},
+			logosIntegration = {
+				addLogosButtonToTooltips = structKeyExists(rc, "logosIntegration_addLogosButtonToTooltips"),
+				theme = rc.logosIntegration_theme
+			},
+			advancedOptions = {
+				showTooltipOnHover = structKeyExists(rc, "advancedOptions_showTooltipOnHover"),
+				openBibleInNewWindow = structKeyExists(rc, "advancedOptions_openBibleInNewWindow"),
+				caseInsensitive = structKeyExists(rc, "advancedOptions_caseInsensitive"),
+				enableReftaggerOnExistingBibliaLinks = structKeyExists(rc, "advancedOptions_enableReftaggerOnExistingBibliaLinks"),
+				chapterLevelTagging = structKeyExists(rc, "advancedOptions_chapterLevelTagging")
+			}
 		}
-
-		if(structKeyExists(rc,"nextPrevButtons")) {
-			var incomingSettings = serializeJSON(
-				{
-					"nextPrevButtons" = structKeyExists(rc, "nextPrevButtons") ? true : false,
-					"todayButton" = structKeyExists(rc, "todayButton") ? true : false,
-					"dateButton" = structKeyExists(rc, "dateButton") ? true : false,
-					"monthButton" = structKeyExists(rc, "monthButton") ? true : false,
-					"weekButton" = structKeyExists(rc, "weekButton") ? true : false,
-					"dayButton" = structKeyExists(rc, "dayButton") ? true : false,
-					"agendaButton" = structKeyExists(rc, "agendaButton") ? true : false,
-					"refreshButton" = structKeyExists(rc, "refreshButton") ? true : false,
-
-					"defaultView" = rc.defaultView,
-					"showLegend" = structKeyExists(rc, "showLegend") ? true : false,
-					"nowIndicator" = structKeyExists(rc, "nowIndicator") ? true : false,
-
-					"navLinks" = structKeyExists(rc, "navLinks") ? true : false,
-					"useTooltips" = structKeyExists(rc, "useTooltips") ? true : false,
-					"includeJquery" = structKeyExists(rc, "includeJquery") ? true : false,
-					"hideJqueryAlert" = structKeyExists(rc, "hideJqueryAlert") ? true : false
-				}
-			);
-		}
-
-		if(structKeyExists(rc,"eventColor")) {
-			var incomingSettings = serializeJSON(
-				{
-					"eventColor" = rc.eventColor,
-					"eventTextColor" = rc.eventTextColor
-				}
-			);
-		}
-
-		var newSettings = deserializeJSON(incomingSettings);
 
 		var existingSettings = deserializeJSON(oSetting.getValue());
 
 		// Append the new settings sent in to the existing settings (overwrite)
-		structAppend(existingSettings, newSettings);
+		structAppend(existingSettings, incomingSettings);
 
 		oSetting.setValue(serializeJSON(existingSettings));
 		settingService.save(oSetting);
@@ -100,6 +98,6 @@ component extends="base" {
 		settingService.flushSettingsCache();
 
 		getInstance("MessageBox@cbmessagebox").info("Settings Saved & Updated!");
-		cb.setNextModuleEvent("reftagger","settings");
+		setNextEvent("reftagger.settings");
 	}
 }

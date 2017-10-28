@@ -1,6 +1,7 @@
 /**
 ********************************************************************************
 Copyright 2017 Regtagger by Mark Skelton and Computer Know How, LLC
+ggacres.org
 compknowhow.com
 ********************************************************************************
 
@@ -23,9 +24,5 @@ component{
 
 		// use the CB admin layout
 		event.setLayout(name="admin", module="contentbox-admin");
-	}
-
-	private struct function getReftaggerSettings() {
-		return deserializeJSON(settingService.getSetting("reftagger"));
 	}
 }
