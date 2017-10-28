@@ -3,6 +3,6 @@
 	"location": "https://github.com/skeltonm/cbmodule-reftagger/raw/master/cbmodule-reftagger.zip",
 	"packageDirectory": "cbmodule-reftagger",
 	"slug": "cbmodule-reftagger",
-	"name": "Reftagger",
+	"name": "ContentBox Reftagger Module",
 	"type": "contentbox-modules"
 }
